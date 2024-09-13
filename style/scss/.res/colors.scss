@@ -1,0 +1,145 @@
+@use "sass:color";
+@use "sass:map";
+@import "./dataset.scss";
+
+// $brand: #FF7E21; // #{var(--brand-color)}; 
+// $primary: #69461E; // #{var(--primary-color)}; 
+// $secondary: #61574C; // #{var(--secondary-color)}; 
+// $tertiary: #1A406B; // #{var(--tertiary-color)}; 
+
+// $palette: "primary",
+//     "secondary",
+//     "tertiary",
+//     "neutral"$neutral_alt,
+//     "light" color.lightness($neutral, map.get(surface_light_set, "bright")),
+//     "dark" color.lightness($neutral, map.get(surface_dark_set, "bright")),
+//     "success"$success,
+//     "warning"$warning,
+//     "danger"$danger,
+//     "info"$info;
+
+$color_set: (
+    "light": -5%,
+    "on_light": 50%,
+    "light_container": 40%,
+    "on_light_container": -40%,
+    "dark": 30%,
+    "on_dark": -30%,
+    "dark_container": -20%,
+    "on_dark_container": 40%
+);
+
+$surface_light_set: (
+    "dim": 37%,
+    "default": 48%,
+    "bright": 50%,
+    "container_lowest": 50%,
+    "container_low": 46%,
+    "container": 44%,
+    "container_hight": 42%,
+    "container_highest": 40%,
+    "on_surface": -40%,
+    "outline": 30%
+);
+
+$surface_dark_set: (
+    "dim": -36%,
+    "default": -36%,
+    "bright": -16%,
+    "container_lowest": -36%,
+    "container_low": -30%,
+    "container": -28%,
+    "container_hight": -23%,
+    "container_highest": -18%,
+    "on_surface": 30%,
+    "outline": 0%
+);
+
+@mixin setBackground($color, $set, $background, $oncolor, $opacity: 1) {
+    @if $color=="brand" {
+        background-color: getGlobalColor($color, $lightness: map.get($set, "light"), $alpha: $opacity);
+        color: getGlobalColor($color, $lightness: map.get($set, "on_light"), $alpha: 1);
+    }
+
+    @else if $color =="primary" or $color =="secondary" or $color =="tertiary" {
+        background-color: getGlobalColor($color, $lightness: map.get($set, $background), $alpha: $opacity);
+        color: getGlobalColor($color, $lightness: map.get($set, $oncolor), $alpha: 1);
+    }
+
+    @else {
+        background-color: color.adjust($color, $lightness: map.get($set, $background), $alpha: $opacity);
+        color: color.adjust($color, $lightness: map.get($set, $oncolor), $alpha: 1);
+    }
+}
+
+@mixin setOutline($color, $set: "light", $colorset: $color_set) {
+    @if $color=="brand" {
+        border-color: getGlobalColor($color, $lightness: map.get($set, "light"));
+        color: getGlobalColor($color, $lightness: map.get($set, "light"), $alpha: 1);
+        background-color: unset;
+    }
+
+    @else if $color =="primary" or $color =="secondary" or $color =="tertiary" {
+        border-color: getGlobalColor($color, $lightness: map.get($set, $colorset));
+        color: getGlobalColor($color, $lightness: map.get($set, $colorset), $alpha: 1);
+        background-color: unset;
+    }
+
+    @else {
+        border-color: color.adjust($color, $lightness: map.get($set, $colorset));
+        color: color.adjust($color, $lightness: map.get($set, $colorset), $alpha: 1);
+        background-color: unset;
+    }
+}
+
+@mixin setText($color, $set: "light") {
+    @include setOutline($color, $color_set, $set);
+}
+
+@mixin setColor($color, $set: "light") {
+    @include setBackground($color, $color_set, $set, #{"on_" + $set});
+
+    &[variant="outlined"] {
+        @include setOutline($color, $color_set, $set);
+    }
+}
+
+@mixin setSurface($set, $dark: false, $opacity: 1) {
+
+    @if $dark {
+        @include setBackground($neutral, $surface_dark_set, $set, "on_surface", $opacity);
+
+        &[variant="outlined"] {
+            @include setOutline($neutral_alt, $surface_dark_set, "outline");
+        }
+
+    }
+
+    @else {
+        @include setBackground($neutral, $surface_light_set, $set, "on_surface");
+
+        &[variant="outlined"] {
+            @include setOutline($neutral_alt, $surface_light_set, "outline");
+        }
+    }
+}
+
+@mixin defineColor($name, $color) {
+    // --#{$name}-color: $color;
+    --#{$name}-h: #{hue($color)};
+    --#{$name}-l: #{lightness($color)};
+    --#{$name}-s: #{saturation($color)};
+    --#{$name}-a: #{alpha($color)};
+}
+
+@function getGlobalColor($name, $hue: 0deg, $lightness: 0%, $saturation: 0%, $alpha: 0) {
+    @return hsla(calc(var(--#{$name}-h) + #{$hue}),
+        calc(var(--#{$name}-s) + #{$saturation}),
+        calc(var(--#{$name}-l) + #{$lightness}),
+        calc(var(--#{$name}-a) + #{$alpha}),
+    );
+}
+
+@function getColor($color, $lightness: 0%, $alpha: 0) {
+    @return color.adjust($color: $color, $lightness: $lightness, $alpha: -$alpha);
+}

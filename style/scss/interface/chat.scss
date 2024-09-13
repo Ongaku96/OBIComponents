@@ -1,0 +1,295 @@
+@import "../.res/colors.scss";
+@import "../.res/dataset.scss";
+@import "../.res/variants.scss";
+@import "../.res/animations.scss";
+
+[obi-chat] {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--global-radius);
+    overflow: hidden;
+    width: 500px;
+    max-height: 90%;
+    padding: 8px;
+
+    & [chat-list] {
+        overflow: auto;
+        padding: 0 8px;
+
+        & [placeholder] {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            margin: 16px;
+            display: flex;
+            flex-direction: column;
+            font-size: 2em;
+            opacity: 60%;
+            width: 450px;
+            height: 90%;
+            justify-content: center;
+            align-items: center;
+            border-radius: var(--global-radius);
+            @include setColor($neutral);
+            z-index: 2;
+        }
+
+        & [chat-item] {
+            width: 100%;
+            overflow: hidden;
+
+            & [chat-item-message] {
+                display: grid;
+                grid-template-areas: 'profile info info info info'
+                    'profile message message message message'
+                    'tags tags tags tags tags';
+                gap: 4px;
+                grid-template-columns: 50px auto;
+
+                & [chat-user-profile] {
+                    grid-area: profile;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    align-items: center;
+                    width: 50px;
+
+                    & img,
+                    & span {
+                        width: 40px;
+                        height: 40px;
+                        overflow: hidden;
+                        border-radius: 50%;
+                        display: none;
+                        justify-content: center;
+                        align-items: center;
+                        @include setColor($neutral_alt);
+                    }
+
+                    & img {
+                        object-fit: cover;
+                    }
+                }
+
+                & [chat-message-details] {
+                    grid-area: info;
+                    display: flex;
+                    align-items: center;
+                    flex-direction: row;
+                    flex-wrap: nowrap;
+                    height: 24px;
+                    z-index: 1;
+                    font-size: .9em;
+
+                    &>span:first-child {
+                        flex-grow: 1;
+                        text-overflow: clip;
+                    }
+
+                    &>span {
+                        @include setText($neutral);
+                        font-size: .9em;
+                    }
+
+                    &>[float-container]>[obi-button] {
+                        width: 24px;
+                    }
+                }
+
+                & [chat-message-content] {
+                    grid-area: message;
+
+                    & span {
+                        white-space: pre-line;
+                    }
+                }
+
+                & [chat-message-tags] {
+                    grid-area: tags;
+                    display: flex;
+                    justify-content: flex-end;
+                    align-items: center;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                }
+            }
+
+            &[status='sending'] {
+                opacity: 70%;
+
+                &[chat-item-message] {
+                    & [chat-message-details] {
+                        display: none;
+                    }
+
+                    & [chat-message-tags] {
+                        &::after {
+                            content: "\e9d0";
+                            font-family: 'Material Symbols Outlined';
+                            @include setText($info, "light_container");
+                            @include rotate();
+                        }
+                    }
+                }
+            }
+
+            &[status='sent'] {
+                & [chat-item-message] {
+                    [chat-message-tags] {
+                        &::after {
+                            content: "\e877";
+                            font-family: 'Material Symbols Outlined';
+                            @include setText("primary", "light_container");
+                        }
+                    }
+
+                    & [chat-user-profile] {
+
+                        & img,
+                        & span {
+                            @include setColor("primary");
+                        }
+                    }
+                }
+            }
+
+            &[status='error'] {
+                & [chat-item-message] {
+
+                    & [chat-user-profile] {
+                        & span {
+                            display: flex;
+                            @include setColor($danger);
+                        }
+
+                        & img {
+                            display: flex;
+                            border: solid 1px;
+                            @include setText($danger);
+                        }
+                    }
+
+                    & [chat-message-details] {
+                        & span {
+                            @include setText($danger);
+                        }
+
+                        &>[float-container] {
+                            display: none;
+                        }
+                    }
+
+                    & [chat-message-content] {
+                        opacity: 70%;
+                    }
+                }
+            }
+
+            &:not([status='error']) {
+                & [chat-item-message] {
+                    [chat-message-tags] {
+                        & [name='retry'] {
+                            display: none;
+                        }
+                    }
+                }
+            }
+
+            &[separator] {
+                display: flex;
+                flex-direction: row;
+                font-size: .9em;
+                justify-content: center;
+                align-items: center;
+                gap: 8px;
+                @include setText($neutral_alt);
+                opacity: 70%;
+                margin-bottom: 16px;
+
+                &::before {
+                    content: "";
+                    flex-grow: 1;
+                    height: 1px;
+                    border-radius: 1px 0 0 1px;
+                    @include setColor($neutral);
+                }
+
+                &:after {
+                    content: "";
+                    flex-grow: 1;
+                    height: 1px;
+                    border-radius: 0 1px 1px 0;
+                    @include setColor($neutral);
+                }
+            }
+
+            &[last] {
+                margin-bottom: 16px;
+
+                & [chat-item-message] [chat-user-profile] {
+
+                    & img,
+                    & span {
+                        display: flex;
+                    }
+                }
+            }
+        }
+    }
+
+
+    & [chat-editor] {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: flex-end;
+        gap: 4px;
+
+        &>input[type='file'] {
+            display: none;
+        }
+
+        & [obi-button] {
+            margin: 0;
+        }
+
+        &>div:not([obi-textbox]) {
+            flex-grow: unset;
+        }
+    }
+}
+
+@include darkmode() {
+
+    & [obi-chat] {
+        & [chat-list] {
+            & [chat-item] {
+                & [chat-item-message] {
+                    & [chat-user-profile] {
+
+                        & img,
+                        & span {
+                            @include setColor($neutral_alt, "dark");
+                        }
+                    }
+                }
+
+                &[separator] {
+                    @include setText($neutral_alt, "dark");
+
+                    &::before {
+                        @include setColor($neutral,
+                            "dark");
+                    }
+
+                    &:after {
+                        @include setColor($neutral,
+                            "dark");
+                    }
+                }
+            }
+        }
+    }
+
+}

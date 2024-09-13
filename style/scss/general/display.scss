@@ -1,0 +1,90 @@
+@use 'sass:list';
+@import "../.res/variants.scss";
+
+@mixin flexrow {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    @include flexpositioning();
+    @include flexsizing();
+
+    &[flex-top] {
+        align-items: flex-start;
+    }
+
+    &[flex-bottom] {
+        align-items: flex-end;
+    }
+}
+
+[display-row] {
+    @include flexrow();
+}
+
+[display-row="wrap"] {
+    @include flexrow();
+    flex-wrap: wrap !important;
+    overflow: unset !important;
+}
+
+[display-column] {
+    display: flex !important;
+    flex-direction: column !important;
+    @include flexpositioning();
+    @include flexsizing();
+}
+
+[display-grid] {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+
+    @for $size from 1 through 12 {
+        & [grid-size='#{$size}'] {
+            grid-column-end: span $size;
+        }
+    }
+}
+
+[display-grid='blog'] {
+    display: grid !important;
+    grid-template-columns: [#{list.nth($grid_lines, 1)}] auto [#{list.nth($grid_lines, 2)}] 50px [#{list.nth($grid_lines, 3)}] 1fr [#{list.nth($grid_lines, 4)}] 1fr [#{list.nth($grid_lines, 5)}] 50px [#{list.nth($grid_lines, 6)}] auto [#{list.nth($grid_lines, 7)}];
+    column-gap: 8px;
+
+    & [grid-fullpage] {
+        grid-column-start: #{list.nth($grid_lines, 1)};
+        grid-column-end: #{list.nth($grid_lines, 7)};
+    }
+
+    & [grid-article] {
+        grid-column-start: #{list.nth($grid_lines, 3)};
+        grid-column-end: #{list.nth($grid_lines, 5)};
+    }
+
+    & [grid-quote] {
+        grid-column-start: #{list.nth($grid_lines, 2)};
+        grid-column-end: #{list.nth($grid_lines, 6)};
+    }
+
+    @each $line in $grid_lines {
+        & [grid-start='#{$line}'] {
+
+            grid-column-start: $line;
+
+            @for $size from 1 through $grid_size {
+                &[grid-size='#{$size}'] {
+                    grid-column-end: span $size;
+                }
+            }
+
+            @each $name in $grid_lines {
+                &[grid-end='#{$name}'] {
+                    grid-column-end: span $name;
+                }
+            }
+        }
+    }
+
+    @include media-breakpoint("md", true) {
+        grid-template-columns: [#{list.nth($grid_lines, 1)}] auto [#{list.nth($grid_lines, 2)}] 10px [#{list.nth($grid_lines, 3)}] 1fr [#{list.nth($grid_lines, 4)}] 1fr [#{list.nth($grid_lines, 5)}] 10px [#{list.nth($grid_lines, 6)}] auto [#{list.nth($grid_lines, 7)}];
+    }
+}

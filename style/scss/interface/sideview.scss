@@ -1,0 +1,19 @@
+@import "../.res/colors.scss";
+@import "../.res/variants.scss";
+
+[obi-sideview] {
+    display: block;
+    max-width: 0;
+    width: 0;
+    overflow: hidden;
+    transition: width .5s ease;
+
+    @include relevance();
+    @include variants();
+
+    &[display] {
+        width: fit-content;
+        max-width: unset;
+        overflow: inherit;
+    }
+}

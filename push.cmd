@@ -1,0 +1,10 @@
+xcopy C:\Sviluppo\_Frameworks\OBIComponents\components \\swita000006\websites\_webframework\OBIComponents\components /s /e /y
+xcopy C:\Sviluppo\_Frameworks\OBIComponents\LAMP \\swita000006\websites\_webframework\OBIComponents\LAMP /s /e /y
+xcopy C:\Sviluppo\_Frameworks\OBIComponents\resources \\swita000006\websites\_webframework\OBIComponents\resources /s /e /y
+xcopy C:\Sviluppo\_Frameworks\OBIComponents\src \\swita000006\websites\_webframework\OBIComponents\src /s /e /y
+xcopy C:\Sviluppo\_Frameworks\OBIComponents\style\compiled \\swita000006\websites\_webframework\OBIComponents\style\compiled /s /e /y
+xcopy C:\Sviluppo\_Frameworks\OBIComponents\style\StyleBundle.css \\swita000006\websites\_webframework\OBIComponents\style\StyleBundle.css /s /e /y
+xcopy C:\Sviluppo\_Frameworks\OBIComponents\playground.html \\swita000006\websites\_webframework\OBIComponents\playground.html /s /e /y
+xcopy C:\Sviluppo\_Frameworks\OBIComponents\database.json \\swita000006\websites\_webframework\OBIComponents\database.json /s /e /y
+xcopy C:\Sviluppo\_Frameworks\OBIComponents\componentsBundle.js \\swita000006\websites\_webframework\OBIComponents\componentsBundle.js /s /e /y
+xcopy C:\Sviluppo\_Frameworks\OBIComponents\core.js \\swita000006\websites\_webframework\OBIComponents\core.js /s /e /y

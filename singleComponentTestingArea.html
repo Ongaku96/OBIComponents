@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0">
+    <link type="text/css" rel="stylesheet" href="./style/StyleBundle.css">
+    <script src="./componentsBundle.js" type="module"></script>
+</head>
+
+<body theme="">
+
+    <div id="app" display-row style="width: 200px;">
+
+        <obi-table id="test2" :dati="tabledata2" :colonne="columns" :filtro="filterModel">
+            <div slot="filtro" filter-form display-row>
+                <obi-textbox label="Stato" :valore="filterModel.Stato"></obi-textbox>
+                <obi-textbox label="Codice" :valore="filterModel.Codice"></obi-textbox>
+                <obi-button variant="filled" label='Filtra' @click="$.table2.context.update()"></obi-button>
+            </div>
+        </obi-table>
+    </div>
+
+    <!-- <obi-app id="app">
+        <div slot='tool' app-tool>
+            <app-user @edit="alert('aggiornato')"></app-user>
+            <app-settings></app-settings>
+        </div>
+        <obi-nav slot='navigation'>
+            <nav-item titolo="Home"></nav-item>
+            <nav-item titolo="Prima Nota Cassa"></nav-item>
+            <nav-item titolo="Prospetto Incassi"></nav-item>
+        </obi-nav>
+        <app-content>
+            <div cmd-if="!$.selectedRowItem">
+                <obi-breadcrumbs display-row flex-end :path='indexpath' size="sm"></obi-breadcrumbs>
+                <obi-card titolo="TEST DATI" :collapse="$.collapsed ? 'hide' : 'show'"
+                    @click="$.collapsed = !$.collapsed">
+                    <card-body>
+
+                        <obi-table chiave="id" :dati="tabledata" :colonne="columns" @rowclick="openDetails"
+                            alternate="primary" interact></obi-table>
+                    </card-body>
+                </obi-card>
+            </div>
+            <div cmd-else>
+                <obi-breadcrumbs flex-end :path='detailpath' size="sm"></obi-breadcrumbs>
+                <obi-card :titolo="detailcardtitle">
+                    <card-body>
+                        <obi-tab>
+                            <tab-item titolo="Box" @click="$.detailtab='box'" :attivo="$.detailtab == 'box'"></tab-item>
+                            <tab-item titolo="Pos" @click="$.detailtab='pos'" :attivo="$.detailtab == 'pos'"></tab-item>
+                            <tab-item titolo="Assegno" @click="$.detailtab='assegno'"
+                                :attivo="$.detailtab == 'assegno'"></tab-item>
+                        </obi-tab>
+                        <obi-card relevance="primary" titolo="BOX" cmd-if="$.detailtab == 'box'">
+                            <card-body>
+                                <group-component>
+                                    <obi-textbox label="boh" append="€"></obi-textbox>
+                                    <obi-button label="ciao"></obi-button>
+                                </group-component>
+                            </card-body>
+                        </obi-card>
+                        <obi-card relevance="secondary" titolo="POS" cmd-elseif="$.detailtab == 'pos'"> </obi-card>
+                        <obi-card relevance="tertiary" titolo="ASSSEGNO" cmd-elseif="$.detailtab == 'assegno'">
+                        </obi-card>
+                    </card-body>
+                </obi-card>
+            </div>
+        </app-content>
+    </obi-app> -->
+
+    <script type="module">
+        import RenderEngine from "./LAMP/RenderModule/LampRender.js";
+        import { Collection } from "./LAMP/RenderModule/modules/enumerators.js";
+        import { Support } from "./LAMP/RenderModule/modules/library.js";
+        import "./components/demo.component.js";
+        import { obiLoader, asyncDataLoader } from "./core.js";
+
+        // const dataset = {
+        //     dataset: {
+        //         mybirth: new Date(1996, 5, 27),
+        //         user: {
+        //             id: 6,
+        //             username: "mbiagini",
+        //             nome: "Marco",
+        //             cognome: "Biagini",
+        //             profilo: "",
+        //             ruolo: "Analista Software",
+        //             reparto: "IT Sviluppo",
+        //             negozi: ["003 Imola"],
+        //             fornitori: [],
+        //         },
+        //         users: [
+        //             { id: 6, username: "mbiagini", selected: false, descrizione: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quam velit, tincidunt commodo mi vitae, tincidunt elementum ligula. Cras a dui dapibus, posuere purus quis, fringilla ante." },
+        //             { id: 2, username: "agalli", selected: true, descrizione: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quam velit, tincidunt commodo mi vitae, tincidunt elementum ligula. Cras a dui dapibus, posuere purus quis, fringilla ante." },
+        //             { id: 3, username: "sfiloni", selected: false, descrizione: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quam velit, tincidunt commodo mi vitae, tincidunt elementum ligula. Cras a dui dapibus, posuere purus quis, fringilla ante." },
+        //             { id: 5, username: "kamadori", selected: true, descrizione: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quam velit, tincidunt commodo mi vitae, tincidunt elementum ligula. Cras a dui dapibus, posuere purus quis, fringilla ante." },
+        //             { id: 4, username: "wmaggioni", selected: true, descrizione: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quam velit, tincidunt commodo mi vitae, tincidunt elementum ligula. Cras a dui dapibus, posuere purus quis, fringilla ante." },
+        //             { id: 1, username: "mgambino", selected: false, descrizione: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quam velit, tincidunt commodo mi vitae, tincidunt elementum ligula. Cras a dui dapibus, posuere purus quis, fringilla ante." },
+        //         ],
+        //         columns: [
+        //             { name: "id", label: 'ID', type: "number" },
+        //             { name: "username", label: "Username", type: "text" }
+        //         ],
+        //         page: "nuovo",
+        //         numero: 5,
+        //         form: {
+        //             id: 0,
+        //             username: "",
+        //             nome: "",
+        //             cognome: "",
+        //             profilo: "",
+        //             ruolo: "",
+        //             reparto: "",
+        //             negozi: [],
+        //             fornitori: []
+        //         },
+        //         options: [{ label: "Nessuna opzione", value: 0 }, { label: "Opzione 1", value: 1 }, { label: "Opzione 2", value: 2 }, { label: "Opzione 3", value: 3 }, { label: "Opzione 4", value: 4 }],
+        //         date: Date.now(),
+        //         calendar: {
+        //             months: ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"],
+        //             months_short: ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"],
+        //             week_days: ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"],
+        //             week_days_short: ["Lu", "Ma", "Me", "Gi", "Ve", "Sa", "Do"],
+        //             week_days_single: ["L", "M", "M", "G", "V", "S", "D"],
+        //             date_display: Date.now,
+        //             date_select: Date.now,
+        //             view: "grid"
+        //         },
+        //         selezione: "",
+        //         logged: true,
+        //     },
+        //     computed: {
+        //     },
+        //     actions: {
+        //         getColumnValue: function (item, key) {
+        //             return item[key];
+        //         },
+        //         addUser: function () {
+        //             this.users.push(this.form);
+        //         },
+        //         dataSelect: function (row_data) {
+        //             if (row_data) {
+        //                 alert("Cliccata riga " + row_data.row.username);
+        //             } else {
+        //                 alert("row data was undefined");
+        //             }
+        //         },
+        //         showModal: function () {
+        //             let _modal = document.getElementById("test_modal");
+        //             _modal.virtual.context.showModal();
+        //         },
+        //         update: function () {
+        //             builder.update(dataset);
+        //         }
+        //     },
+        //     events: [{
+        //         name: "progress",
+        //         action: function (state) {
+        //             if (state == "updated") console.log(this);
+        //             if (state == "context_created") console.log(this);
+        //         }
+        //     }],
+        //     settings: {
+        //         debug: true
+        //     }
+        // };
+
+        RenderEngine.instance.start("app").build({
+            dataset: {
+
+                collapsed: true,
+                loremipsum: `<strong>Lorem ipsum</strong> dolor sit amet, consectetur adipiscing elit. Nullam consequat massa enim, eu sodales dui ornare sit amet. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec quis magna a ex laoreet sodales id sit amet lectus. Etiam elit est, pulvinar sed luctus quis, sagittis eu mi. Sed dui mauris, pellentesque et posuere vitae, tristique ut nisl. Duis viverra sapien non mauris dictum tristique. Cras hendrerit urna dolor, ut maximus purus bibendum quis. Proin ac quam ac lectus hendrerit tincidunt.
+
+Integer ultricies orci id vulputate varius. Aliquam posuere dolor magna, et auctor erat pharetra id. Phasellus nunc nulla, pretium ut tincidunt ac, malesuada sed sapien. Pellentesque gravida a tortor eget pulvinar. Donec pharetra a ante vitae viverra. Phasellus in enim ac metus facilisis tempor. In non elit tortor. Ut vulputate felis eu odio fringilla scelerisque. Etiam lectus elit, consectetur vitae odio non, egestas accumsan dui. Ut eleifend dictum erat tempus lacinia. In eu tortor id quam ultricies maximus sed ac turpis. Vivamus ac enim risus.`,
+                user: {
+                    username: 'mbiagini', password: 'qwerty'
+                },
+                elevated: false,
+                myvalore: 0,
+                treedata: {
+                    label: "Colazione",
+                    active: true,
+                    prepend: "bakery_dining",
+                    children: [
+                        {
+                            label: "cappuccino",
+                            children: [
+                                {
+                                    label: "latte",
+                                    action: function () { alert(this.label); }
+                                },
+                                {
+                                    label: "caffé",
+                                    action: function () { alert(this.label); }
+                                }
+                            ]
+                        },
+                        {
+                            label: "toast",
+                            children: [
+                                { label: "bread" },
+                                { label: "egg" },
+                                { label: "cheese" },
+                                { label: "ham" },
+                            ],
+                        }
+                    ]
+                },
+                data: [
+                    { label: "Opzione 1", value: 1 },
+                    { label: "Opzione 2", value: 2 },
+                    { label: "Opzione 3", value: 3 },
+                ],
+                model: {
+                    nome: "Marco",
+                    cognome: "Biagini",
+                    genere: 1,
+                },
+                list: [],
+                columns: [
+                    "Stato",
+                    "Codice",
+                    // { label: "Posatore", name: "RagioneSociale" }, 
+                    // { label: "Cliente", name: "Cognome" }, 
+                    // "Referente", 
+                    // { label: "Data Apertura", name: "InsertTime", type: "datetime" }, 
+                    // { label: "Preventivo", name: "Preventivo", type: "currency" }, 
+                    // { label: "Fattura", name: "Fattura", type: "currency" }, 
+                    "Negozio"],
+                filterModel: {
+                    Stato: "",
+                    Posatore: "",
+                    Cliente: "",
+                    Referente: "",
+                    Codice: "",
+                },
+                value: false,
+                today: new Date(),
+                tabledata: [],
+                tabledata2: [],
+                selectedRowItem: null,
+                indexpath: [{ label: "Index" }],
+                detailpath: [
+                    {
+                        label: "Index",
+                        action(target) { target.__node.context.selectedRowItem = null; }
+                    },
+                    {
+                        label: "Dettaglio"
+                    }
+                ],
+                detailtab: "box",
+                file: {
+                    data: {
+                        name: "ombrellonisconti.jpg",
+                    },
+                    url: {
+                        file: "./resources/images/ombrellonisconti.jpg",
+                        preview: "./resources/images/ombrellonisconti.jpg",
+                    }
+                }
+            },
+            computed: {
+                collapse: function () { return this.collapsed ? "hide" : "show"; },
+                detailcardtitle: function () { return `PAGINA DI DETTAGLIO DI ${this.selectedRowItem.nome}`; },
+                table1: function () { return document.getElementById("test1").virtual; },
+                table2: function () { return document.getElementById("test2").virtual; },
+            },
+            actions: {
+                sendEmail(receiver) {
+                    window.open(`mailto:${receiver.params.receiver}`);
+                },
+                sendmymessage() {
+                    var chat = document.getElementById("mia_chat");
+                    chat.virtual.context.sendMessage({
+
+                    });
+                },
+                dynamicFilter() {
+                    var table = document.querySelector("[obi-table]").virtual.context;
+                    table.addFilter(this.filterModel);
+                },
+                filtra() {
+                    var table = document.querySelector("[obi-table]").virtual.context;
+                    table.removeFilter(this.filterModel);
+                    table.addFilter(JSON.parse(JSON.stringify(this.filterModel)));
+                    this.filterModel.nome = "";
+                },
+                logNode(node) {
+                    console.log(node);
+                },
+                printData() {
+                    document.getElementById("table").virtual.context.export("export", { displayLabels: true });
+                },
+                openDetails(item) {
+                    this.selectedRowItem = item
+                },
+                async updateTable() {
+                    await document.querySelector("[obi-table]").virtual.context.refreshFilter();
+                }
+            },
+            events: [{
+                name: "progress",
+                async action(state) {
+                    if (state == "mounted") {
+                        this.tabledata2 = await elabData(20000);
+                        this.table2.context.update();
+                    }
+                }
+            }]
+        });
+
+        function randomDate() {
+            return new Date(Math.random() * (2024 - 2020 + 1) + 2020,
+                Math.random() * (12) + 1,
+                Math.random() * (29) + 1);
+        }
+        function randomString(length) {
+            let result = '';
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,:';
+            const charactersLength = characters.length;
+            let counter = 0;
+            while (counter < length) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                counter += 1;
+            }
+            return result;
+        }
+        function elabData(limit) {
+            var list = [];
+            for (let i = 0; i < limit; i++) {
+                list.push({
+                    ID: i,
+                    Nome: randomString(Math.random() * 20),
+                    Note: randomString(Math.random() * 100),
+                    TimeStamp: randomDate(),
+                    InsertTime: randomDate(),
+                    IDOwner: Math.random() * 200,
+                    IDLastUser: Math.random() * 200,
+                    Codice: "#" + randomString(Math.random() * 10),
+                    ValorePreventivo: Math.random() * 1000,
+                    ValoreFattura: Math.random() * 1000,
+                    Fattura: Math.random() * 1000,
+                    Fee: 33,
+                    PrezzoTotale: Math.random() * 1000,
+                    Prenotazione: Math.random() * 1000,
+                    Referente: randomString(8),
+                    IDCliente: Math.random() * 200,
+                    IDIndirizzoCliente: Math.random() * 200,
+                    IDAzienda: Math.random() * 200,
+                    IDContattoAzienda: Math.random() * 200,
+                    IDStato: Math.random() * 6,
+                    IDNegozio: Math.random() * 999,
+                    DataBuonoConsegna: randomDate(),
+                    IDTipoChiusura: Math.random() * 200,
+                    NomeChiusura: randomString(8),
+                    RagioneSociale: randomString(10),
+                    TelefonoAzienda: randomString(11),
+                    EmailAzienda: randomString(8),
+                    PECAzienda: randomString(8),
+                    NomeCliente: randomString(8),
+                    Cognome: randomString(8),
+                    TelefonoCliente: randomString(11),
+                    EmailCliente: randomString(8),
+                    Via: randomString(8),
+                    Citta: randomString(8),
+                    Provincia: randomString(2),
+                    CAP: randomString(5),
+                    Stato: randomString(8),
+                    NomeNegozio: randomString(8),
+                    TelefonoNegozio: randomString(8),
+                    ListaServizi: [randomString(8), randomString(8), randomString(8), randomString(8)],
+                    Username: randomString(8),
+                    Scadenza: randomDate(),
+                    TimerScaduto: Math.random() * 1 == 1 ? true : false,
+                });
+            }
+            return list;
+            // return sleep(3000).then(() => {
+            // });
+
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,231 @@
+@import "../.res/shadows.scss";
+@import "../.res/colors.scss";
+@import "../.res/variants.scss";
+
+div[obi-date] {
+    @include disabled() {
+        & [text-input] {
+            @include setSurface("dim");
+
+            & input {
+                cursor: not-allowed;
+            }
+        }
+    }
+
+    ;
+
+    & div[text-input] {
+        & input {
+            height: 36px;
+            margin-top: 8px;
+        }
+
+        & label {
+            font-weight: normal;
+            font-size: 0.875rem;
+            letter-spacing: 0.25px;
+            height: .875rem;
+            opacity: 1;
+        }
+
+        & div[append] {
+            padding-right: 0;
+
+            & button {
+                height: 24px !important;
+                width: 24px !important;
+            }
+        }
+
+
+    }
+
+    & div[date-calendar] {
+        flex-direction: column;
+        border-radius: var(--global-radius);
+        @include setSurface("container_highest");
+        height: 345px;
+
+        & div[hide] {
+            display: none;
+        }
+
+        & div[name='selectors'] {
+            display: flex;
+            margin: 8px;
+            margin-bottom: 0;
+            min-width: 290px;
+
+            & button[obi-button] {
+                border-radius: 0;
+                padding: 0;
+                justify-content: center;
+                align-items: center;
+
+                &:nth-child(2) {
+                    display: flex;
+                    justify-self: center;
+                    align-items: center;
+                    flex-grow: 1;
+                }
+            }
+
+            & div[name='month_selector'],
+            & div[name='year_selector'] {
+                display: flex;
+                flex-direction: row;
+                flex-grow: 1;
+            }
+        }
+
+        & div[name='month_grid'] {
+            display: grid;
+            justify-items: center;
+            grid-template-columns: auto auto auto auto auto auto auto;
+            padding: 16px;
+
+            // &[display] {
+            //     display: grid;
+            // }
+
+            & label {
+                width: 40px;
+                border-radius: 8px;
+                display: flex;
+                height: 40px;
+                justify-content: center;
+                align-items: center;
+
+                &:hover {
+                    @include setSurface("container");
+                    cursor: pointer;
+                }
+
+                &.prev,
+                &.post {
+                    opacity: 60%;
+                }
+
+                &.today {
+                    @include setSurface("default");
+                }
+
+                &[selected] {
+                    @include setColor("primary");
+                }
+            }
+        }
+
+        & div[name='months_section'] {
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            max-height: 265px;
+            overflow: auto;
+
+            // &[display] {
+            //     display: flex;
+            // }
+
+            & label {
+                padding: 8px;
+                border-radius: var(--global-radius);
+
+                &[current] {
+                    @include setSurface("default");
+                }
+
+                &:hover {
+                    @include setSurface("container");
+                    cursor: pointer;
+                }
+            }
+        }
+
+        & div[name='years_section'] {
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            max-height: 265px;
+            overflow: auto;
+
+            // &[display] {
+            //     display: flex;
+            // }
+
+            & label {
+                padding: 8px;
+                border-radius: var(--global-radius);
+
+                &[current] {
+                    @include setSurface("default");
+                }
+
+                &:hover {
+                    @include setSurface("container");
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
+
+[group-component] {
+    & [obi-date] {
+        &+[obi-button] {
+            min-height: 56px;
+        }
+    }
+}
+
+@include darkmode() {
+    div[obi-date] {
+
+        & div[date-calendar] {
+            @include setSurface("container_highest", true);
+
+            & div[name='month_grid'] {
+
+                & label {
+
+                    &:hover {
+                        @include setSurface("container", true);
+                    }
+
+                    &.today {
+                        @include setSurface("default", true);
+                    }
+
+                    &[selected] {
+                        @include setColor("primary", "dark");
+                    }
+                }
+            }
+
+            & div[name='months_section'] {
+                & label {
+                    &[current] {
+                        @include setSurface("default", true);
+                    }
+
+                    &:hover {
+                        @include setSurface("container", true);
+                    }
+                }
+            }
+
+            & div[name='years_section'] {
+                & label {
+                    &[current] {
+                        @include setSurface("default", true);
+                    }
+
+                    &:hover {
+                        @include setSurface("container", true);
+                    }
+                }
+            }
+        }
+    }
+}

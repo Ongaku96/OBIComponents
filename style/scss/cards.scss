@@ -1,0 +1,133 @@
+@import "./.res/dataset.scss";
+@import "./.res/shadows.scss";
+@import "./.res/variants.scss";
+@import "./.res/colors.scss";
+
+div[obi-card] {
+    display: flex;
+    flex-direction: column;
+    flex-grow: unset;
+    margin: 16px;
+    border-radius: var(--global-radius);
+    @include variants();
+    @include sizes();
+    @include relevance("light_container");
+
+    & section {
+
+        &[card-header] {
+            padding: 16px 24px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            @include sizes();
+
+            &>[prepend] {
+                margin-right: .7rem;
+            }
+
+            &>[append] {
+                margin-left: .7rem;
+            }
+
+            &>div[obi-title] {
+                flex-grow: 1;
+                font-weight: 500;
+            }
+        }
+
+        &[card-body] {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            padding: 16px 24px;
+            font-size: 1em;
+            font-weight: 400;
+            letter-spacing: 0.5;
+            text-overflow: ellipsis;
+            overflow: auto;
+        }
+
+        &[card-actions] {
+            padding: 8px 24px;
+            flex-grow: unset;
+            flex-grow: auto;
+            flex-direction: row;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            align-items: center;
+            border-radius: inherit;
+
+            &[position='start'] {
+                justify-content: flex-start;
+            }
+
+            &[position='center'] {
+                justify-content: center;
+            }
+
+            &>* {
+                margin: 4px;
+
+                &:first-child() {
+                    margin: 0;
+                }
+
+                &:last-child() {
+                    margin: 0;
+                }
+            }
+
+            @include variants();
+        }
+    }
+
+    &[variant='filled']:not([relevance]) {
+        @include setSurface("bright");
+    }
+
+    &[collapse="hide"] {
+
+        &>section[card-header]::after {
+            content: "\e5c5";
+            margin-left: .7rem;
+            font-family: 'Material Symbols Outlined';
+            font-size: 1.7em;
+        }
+
+        & [card-body] {
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            transition: max-height .5s ease;
+        }
+    }
+
+    &[collapse="show"] {
+        &>section[card-header]::after {
+            content: "\e5c7";
+            margin-left: .7rem;
+            font-family: 'Material Symbols Outlined';
+            font-size: 1.7em;
+        }
+
+        & [card-body] {
+            max-height: 9999px;
+            padding-top: 16px;
+            padding-bottom: 16px;
+            transition: max-height .5s ease;
+        }
+    }
+}
+
+@include darkmode() {
+    & div[obi-card] {
+        @include relevance("dark_container");
+
+        &[variant='filled']:not([relevance]) {
+            @include setSurface("bright", true);
+        }
+    }
+}

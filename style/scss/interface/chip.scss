@@ -1,0 +1,35 @@
+@import "../.res/colors.scss";
+@import "../.res/variants.scss";
+
+div[obi-chip] {
+    display: flex;
+    justify-content: flex-start;
+    flex-grow: unset;
+    align-items: center;
+    border-radius: var(--global-radius);
+    height: 32px;
+    padding: 0 16px;
+    cursor: pointer;
+    @include setSurface("container", false);
+    @include relevance();
+    @include sizes();
+
+    &:has([name='prepend']) {
+        padding-left: 0px;
+    }
+
+    &:has([name='append']) {
+        padding-right: 0px;
+    }
+
+    & .material-symbols-outlined {
+        font-size: 18px;
+        padding: 8px;
+    }
+}
+
+@include darkmode() {
+    & div[obi-chip] {
+        @include setSurface("container", true);
+    }
+}

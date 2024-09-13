@@ -1,0 +1,103 @@
+@import "../.res/colors.scss";
+@import "../.res/variants.scss";
+@import "../.res/animations.scss";
+
+div[obi-tab] {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: auto;
+    flex-grow: 1;
+    @include unprintable();
+    @include sizes();
+
+    &[variant='filled'] {
+        & a[tab-item] {
+            flex-grow: 1;
+
+            &[attivo] {
+                & [container] {
+                    flex-grow: 1;
+                }
+            }
+        }
+    }
+
+    & a[tab-item] {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-grow: unset;
+        align-items: center;
+        justify-content: center;
+        min-width: 116px;
+        cursor: pointer;
+        @include ripple();
+
+        &:hover {
+            @include setColor($neutral, "light_container");
+        }
+
+        &[icon] {
+            font-size: 24px;
+        }
+
+        &[attivo] {
+            & [container] {
+                @include setOutline("primary", $color_set, "light");
+
+                &::after {
+                    height: 3px;
+                    width: 100%;
+                }
+            }
+        }
+
+        & [container] {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-grow: unset;
+            height: 48px;
+
+            &::after {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                height: 0;
+                width: 0;
+                transition: width .3s ease;
+                @include setBackground("primary", $color_set, "light", "light");
+            }
+
+            &:has([obi-icon]) {
+                height: 64px;
+            }
+        }
+
+        & [obi-badge] {
+            top: 0;
+            left: 60%;
+        }
+    }
+}
+
+@include darkmode() {
+    div[obi-tab] {
+        & a[tab-item] {
+            &[attivo] {
+                & [container] {
+                    @include setOutline("primary", $color_set, "dark");
+
+                    &::after {
+                        @include setBackground("primary", $color_set, "dark", "dark");
+                    }
+                }
+            }
+        }
+    }
+}
